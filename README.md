@@ -73,4 +73,4 @@ Contributions are welcome! Please read the contributing guidelines for details o
 This project is licensed under the MIT License. See the LICENSE file for details.
 
 ### Contact
-For any inquiries or feedback please contact me at https://nafisalawalidris.github.io/13/.
+For any inquiries or feedback please contact me at https://github.com/Shankhadeep04
