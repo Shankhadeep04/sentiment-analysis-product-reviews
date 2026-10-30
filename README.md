@@ -24,6 +24,29 @@ If you find this project useful, please consider giving it a star ⭐ on GitHub.
 - Matplotlib
 - Seaborn
 
+## Project Structure
+Product_Review_Sentiment_Analysis/
+│
+├── dataset/
+│   └── product_reviews.csv
+│
+├── notebooks/
+│   └── sentiment_analysis.ipynb
+│
+├── src/
+│   ├── data_ingestion.py
+│   ├── data_preprocessing.py
+│   ├── feature_engineering.py
+│   ├── model_training.py
+│   └── model_evaluation.py
+│
+├── models/
+│   └── sentiment_model.pkl
+│
+├── app.py
+├── requirements.txt
+└── README.md
+
 ### Installation
 
 To set up the project, follow these steps:
