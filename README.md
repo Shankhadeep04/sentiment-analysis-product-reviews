@@ -1,20 +1,30 @@
 # Product Review Sentiment Analysis
 
-The goal of this project is to analyze customer reviews to determine their sentiment—positive, negative, or neutral—based on the text content of the reviews and associated metadata. This analysis helps to understand customer feedback, identify product strengths and weaknesses, and improve the overall customer experience by providing actionable insights.
+## 📌 Project Overview
 
-If you find this project useful, please consider giving it a star ⭐ on GitHub. Contributions are also welcome!
+The goal of this project is to analyze customer reviews and determine their sentiment — **Positive, Negative, or Neutral** — based on the text content of reviews and associated metadata.
 
-![alt text](<Screenshot (130).png>)
+This project helps understand customer feedback, identify product strengths and weaknesses, and improve the overall customer experience through actionable insights.
 
-## Table of Contents
+If you find this project useful, please consider giving it a ⭐ on GitHub. Contributions are always welcome!
+
+## 📸 Project Screenshot
+
+![Project Screenshot](Screenshot%20(130).png)
+
+## 📑 Table of Contents
+
 - [Technologies Used](#technologies-used)
+- [Project Structure](#project-structure)
 - [Installation](#installation)
 - [Usage](#usage)
 - [Features](#features)
 - [Contributing](#contributing)
 - [License](#license)
 - [Contact](#contact)
-### Technologies Used
+
+## 🛠️ Technologies Used
+
 - Python
 - Streamlit
 - Scikit-learn
@@ -24,7 +34,9 @@ If you find this project useful, please consider giving it a star ⭐ on GitHub.
 - Matplotlib
 - Seaborn
 
-## Project Structure
+## 📂 Project Structure
+
+```text
 Product_Review_Sentiment_Analysis/
 │
 ├── dataset/
