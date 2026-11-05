@@ -29,6 +29,10 @@ except Exception as exc:
              "`sentiment_model.pkl` and `vectorizer.pkl` are in the app folder.")
     st.exception(exc)
     st.stop()
+    model_name = st.selectbox(
+    "Select Machine Learning Model",
+    ["Logistic Regression"]
+)
 
 review = st.text_area(
     "Enter your product review",
