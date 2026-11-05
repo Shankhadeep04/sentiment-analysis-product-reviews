@@ -30,6 +30,8 @@ streamlit run app.py
 4. Set the main file path to `app.py`.
 5. Select **Deploy**.
 
+🚀 Live Demo: https://sentiment-ml-shankhadeep04.streamlit.app/
+
 ## Important model note
 The supplied model has two output classes (0 and 1). This app maps them to
 Negative and Positive, respectively, based on the labeling convention in the
