@@ -1,136 +1,75 @@
 import streamlit as st
 import joblib
-import os
+from pathlib import Path
 
-from src.data_preprocessing import clean_text
+BASE_DIR = Path(__file__).resolve().parent
 
-
-# Page configuration
 st.set_page_config(
     page_title="Product Review Sentiment Analysis",
     page_icon="⭐",
-    layout="wide"
+    layout="centered"
 )
 
-# Load trained models
 @st.cache_resource
-def load_models():
+def load_artifacts():
+    model = joblib.load(BASE_DIR / "sentiment_model.pkl")
+    vectorizer = joblib.load(BASE_DIR / "vectorizer.pkl")
+    return model, vectorizer
 
-    logistic_model = joblib.load(
-        "models/logistic_model.pkl"
-    )
+st.title("⭐ Product Review Sentiment Analysis")
+st.write(
+    "Enter a product review to predict whether its sentiment is "
+    "positive or negative using a trained Logistic Regression model."
+)
 
-    naive_bayes_model = joblib.load(
-        "models/naive_bayes_model.pkl"
-    )
-
-    return logistic_model, naive_bayes_model
-
-
-# Load models
 try:
-    logistic_model, naive_bayes_model = load_models()
-
-except FileNotFoundError:
-    st.error("Model files not found. Please run py main.py first.")
+    model, vectorizer = load_artifacts()
+except Exception as exc:
+    st.error("The model files could not be loaded. Make sure both "
+             "`sentiment_model.pkl` and `vectorizer.pkl` are in the app folder.")
+    st.exception(exc)
     st.stop()
 
-
-# Application title
-st.title("⭐ Product Review Sentiment Analysis")
-
-st.write(
-    "Analyze customer product reviews using Natural Language Processing "
-    "and Machine Learning."
-)
-
-st.divider()
-
-
-# Sidebar
-st.sidebar.title("Project Information")
-
-st.sidebar.write("Machine Learning Algorithms:")
-
-st.sidebar.write("1. Logistic Regression")
-st.sidebar.write("2. Naive Bayes")
-
-st.sidebar.write("NLP Technique: TF-IDF")
-
-
-# Model selection
-model_choice = st.selectbox(
-    "Select Machine Learning Model",
-    ["Logistic Regression", "Naive Bayes"]
-)
-
-# Review input
 review = st.text_area(
-    "Enter Your Product Review",
-    placeholder="Example: Excellent product with amazing quality..."
+    "Enter your product review",
+    placeholder="Example: The product quality is excellent and delivery was fast...",
+    height=140
 )
 
-
-# Prediction button
-if st.button("Analyze Sentiment"):
-
-    if review.strip() == "":
-        st.warning("Please enter a product review.")
-
+if st.button("Analyze Sentiment", type="primary", use_container_width=True):
+    if not review.strip():
+        st.warning("Please enter a review first.")
     else:
+        try:
+            review_vector = vectorizer.transform([review.strip()])
+            prediction = model.predict(review_vector)[0]
 
-        cleaned_review = clean_text(review)
+            # The uploaded model contains two classes: 0 and 1.
+            # The project notebook defines negative as 0 and positive as 1.
+            labels = {0: "Negative", 1: "Positive"}
+            sentiment = labels.get(prediction, str(prediction))
 
-        if not cleaned_review.strip():
-            st.warning("Please enter a meaningful text review.")
-
-        else:
-            if model_choice == "Logistic Regression":
-                model = logistic_model
-
+            st.subheader("Prediction")
+            if sentiment.lower() == "positive":
+                st.success("Positive sentiment 😊")
+            elif sentiment.lower() == "negative":
+                st.error("Negative sentiment 😞")
             else:
-                model = naive_bayes_model
+                st.info(f"Predicted class: {sentiment}")
 
-            prediction = model.predict([cleaned_review])[0]
+            if hasattr(model, "predict_proba"):
+                probabilities = model.predict_proba(review_vector)[0]
+                class_labels = [
+                    labels.get(cls, str(cls)) for cls in model.classes_
+                ]
+                st.subheader("Prediction confidence")
+                for label, probability in zip(class_labels, probabilities):
+                    st.write(f"**{label}:** {probability * 100:.2f}%")
+                    st.progress(float(probability))
 
-            probabilities = model.predict_proba(
-                [cleaned_review]
-            )[0]
-
-            confidence = max(probabilities) * 100
-
-            st.subheader("Sentiment Prediction")
-
-            if prediction == "Positive":
-                st.success("Positive Sentiment 😊")
-
-            elif prediction == "Negative":
-                st.error("Negative Sentiment 😞")
-
-            else:
-                st.info("Neutral Sentiment 😐")
-
-            st.metric(
-                "Prediction Confidence",
-                f"{confidence:.2f}%"
-            )
-
-            st.write("### Sentiment Probabilities")
-
-            for sentiment, probability in zip(
-                model.classes_,
-                probabilities
-            ):
-
-                st.write(
-                    f"{sentiment}: {probability * 100:.2f}%"
-                )
-
-                st.progress(float(probability))
-
+        except Exception as exc:
+            st.error("Prediction failed. Please check the model and vectorizer files.")
+            st.exception(exc)
 
 st.divider()
-
-st.caption(
-    "Developed using Python, NLP, TF-IDF and Machine Learning."
-) is this ok
+st.caption("Built with Python, Streamlit, TF-IDF and Logistic Regression.")
